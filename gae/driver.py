@@ -4,7 +4,13 @@ class MainPage(webapp2.RequestHandler):
 #	upon a get request
 	def get(self):
 		self.response.headers['Content-Type'] = 'text/html'
-		self.response.write('main page')
+#		naive approach at the moment TODO
+		main = open("web/test.html", "r")
+		text = ""
+		for l in main:
+			text += l
+		main.close()
+		self.response.write(text)
 
 class DevPage(webapp2.RequestHandler):
 	def get(self):
