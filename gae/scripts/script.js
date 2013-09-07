@@ -32,7 +32,7 @@ $(document).ready(function() {
 	});
 	$('.download').click(function(){
 		recorder && recorder.exportWAV(function(sound){
-			var url = URL.createObjectURL(sound);
+			Recorder.forceDownload(sound, 'recoring001.wav');
 			console.log(url);
 		});
 	});
