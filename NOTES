@@ -1,0 +1,3 @@
+run google application environment by invoking:
+
+$ dev_appserver.py gae/
