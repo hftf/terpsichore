@@ -1,0 +1,5 @@
+# define backends applications here
+backends:
+# - name
+# class: determine memory and cost ($$$)
+# instances: 
