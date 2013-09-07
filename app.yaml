@@ -1,5 +1,5 @@
 # until we register the app, we do not need to set the id
-application: my-app-id 
+application: terpsichore-music
 version: 1
 # do we want to get this to python3 or does it not matter?
 runtime: python27
