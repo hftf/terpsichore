@@ -1,6 +1,117 @@
-<htmL>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test</title>
+    <meta charset="utf-8" />
+
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
+    <style type="text/css">
+body, h2 {
+    font-family: 'Whitney Light' !important;
+}
+h2 .bullet {
+    font-family: 'WhitneyIndexWhite RoundLt1';
+    float: left;
+    line-height: 1.2;
+    padding-right: 0.5em;
+}
+main {
+    min-width: 1000px;
+    margin-left: 20px;
+}
+.fakewaveform {
+    text-align: center;
+}
+section > h2 {
+    width: 16%;
+    float: left;
+    /*text-align: right;*/
+    /*padding-right: 1em;*/
+    margin: 0;
+}
+section > div {
+    width: 84%;
+    float: left;
+    border-left: 2px solid #ccc;
+    padding-left: 1em;
+    margin-bottom: 1em;
+}
+    </style>
+
+    <script src="wavesurfer.js"></script>
+    <script src="webaudio.js"></script>
+    <script src="drawer.js"></script>
+    <script src="drawer.canvas.js"></script>
+    <script src="drawer.svg.js"></script>
+    <script src="main.js"></script>
+</head>
 <body>
-	<h1>terpsichore</h1>
-	<p>blah blah blah, I need some style</p>
+    <main>
+        
+        <section class="waveform">
+            <h2><span class="bullet">1</span> Waveform</h2>
+            <div>
+            <!--
+            <div id="waveform" style="height: 128px">
+                <div class="progress" id="progress-bar">
+                    <div class="progress-bar progress-bar-info"></div>
+                </div>
+            </div>
+            -->
+
+            <div class="controls">
+                <!--<button class="btn btn-primary" data-action="back">
+                    <i class="glyphicon glyphicon-step-backward"></i>
+                </button>-->
+
+                <button class="btn btn-primary" data-action="play">
+                    <i class="glyphicon glyphicon-play"></i><!--
+                    /
+                    <i class="glyphicon glyphicon-pause"></i>-->
+                </button>
+
+                <!--<button class="btn btn-primary" data-action="forth">
+                    <i class="glyphicon glyphicon-step-forward"></i>
+                </button>-->
+
+                <button class="btn btn-primary" data-action="toggle-mute">
+                    <i class="glyphicon glyphicon-volume-off"></i>
+                </button>
+
+                <div class="mark-controls">
+                    <button class="btn btn-success" data-action="green-mark">
+                        <i class="glyphicon glyphicon-flag"></i>
+                        Set green mark
+                    </button>
+
+                    <button class="btn btn-danger" data-action="red-mark">
+                        <i class="glyphicon glyphicon-flag"></i>
+                        Set red mark
+                    </button>
+                </div>
+		<!--INSERT-SUBMIT-->
+            </div>
+
+            <p class="fakewaveform"><img src="http://wavesurfer.fm/example/screenshot.png" /></p>
+            </div>
+        </section>
+
+        <section>
+            <h2><span class="bullet">2</span> Spectrum</h2>
+            <div>
+            <p class="fakewaveform"><img src="https://wiki.mozilla.org/images/f/f3/Fft.png" /></p>
+            </div>
+        </section>
+
+        <section>
+            <h2><span class="bullet">3</span>Notation</h2>
+            <div>
+            <object data="tancszvit.preview.svg" type="image/svg+xml"></object>
+            </div>
+        </section>
+
+    </main>
 </body>
 </html>
