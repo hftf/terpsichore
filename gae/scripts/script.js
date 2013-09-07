@@ -18,7 +18,7 @@ $(document).ready(function() {
 	}
 
 	$('.record').click(function(){
-		recorder && recorder.record();
+		recorder && recorder.clear() && recorder.record();
 		$(this).attr('disabled','disabled');
 		$('.stop').removeAttr('disabled')
 		console.log('recording')
@@ -33,13 +33,19 @@ $(document).ready(function() {
 	$('.download').click(function(){
 		recorder && recorder.exportWAV(function(sound){
 			Recorder.forceDownload(sound, 'recoring001.wav');
-			console.log(url);
 		});
 	});
 });
 
 function startStream(stream) {
+	inputPoint = audio_context.createGain();
 	var input = audio_context.createMediaStreamSource(stream);
-	input.connect(audio_context.destination);
-	recorder = new Recorder(input);
+	input.connect(inputPoint);
+
+	recorder = new Recorder(inputPoint);
+
+	zeroGain = audioContext.createGain();
+    zeroGain.gain.value = 0.0;
+    inputPoint.connect(zeroGain);
+    zeroGain.connect(audio_context.destination);
 }
