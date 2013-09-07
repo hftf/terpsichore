@@ -2,6 +2,8 @@ import webapp2
 import urllib
 import re
 
+import audio_fetch
+
 from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
 from google.appengine.api import channel
@@ -47,12 +49,11 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 		blob_info = blobstore.BlobInfo.get(resource)
 		blobkey = blob_info.key()
 #		play what you uploaded
-		#self.send_blob(blob_info)
+		self.send_blob(blob_info)
 #		now send the bytestream
 		blob_reader = blobstore.BlobReader(blobkey)
 		value = blob_reader.read()
-		self.response.headers['Content-Type'] = 'text/plain'
-		self.response.write(str(value))
+			
 
 application = webapp2.WSGIApplication([
 #	define the page tree here
