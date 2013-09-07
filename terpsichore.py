@@ -22,17 +22,45 @@ def freq2note(f):
     cents = np.round(100 * (l - n))
     return (note, octave, n)
 
+SAMPLESIZE = 4400
+
 class Transcriber:
     def __init__(self, framerate, add_note):
         self.framerate = framerate
         self.add_note = add_note
         self.buffer = np.array([], dtype=np.int16)
+        self.samplestart = 0
+        self.current = {}
 
     def process(self, data):
-        numpy.concatenate(self.buffer, data)
+        np.concatenate((self.buffer, data))
+        while self.samplestart + SAMPLESIZE < len(data):
+            sample = data[self.samplestart:self.samplestart+SAMPLESIZE]
+            f = sorted(fourier(sample, self.framerate),
+                       key=operator.itemgetter(1), reverse=True)
+            cs = [(freq2note(x[0]), x[1]) for x in f[:10] if x[1] > 10]
+            cs = [x for x in cs if x[1] > cs[0][1] / 2]
 
-def note(n):
-    print(n)
+            notes = [c[0] for c in cs]
+            kill = []
+
+            for note in self.current:
+                if not note in notes:
+                    dur = self.current[note] * SAMPLESIZE/2 / self.framerate
+                    self.add_note(note, self.samplestart / self.framerate - dur, dur)
+                    kill.append(note)
+            for k in kill:
+                del(self.current[k])
+            for note in notes:
+                if note in self.current:
+                    self.current[note] = self.current[note] + 1
+                else:
+                    self.current[note] = 1
+            self.samplestart += SAMPLESIZE/2
+
+def handle_note(n, start, dur):
+    (note, octave, off) = n
+    print('{} ({}) from {} for {}s'.format(note, octave, start, dur))
 
 if __name__ == '__main__':
 
@@ -52,7 +80,7 @@ if __name__ == '__main__':
     data = np.fromstring(wav.readframes(wav.getnframes()), dtype=np.int16)
     wav.close()
 
-    transcriber = Transcriber(framerate, note)
+    transcriber = Transcriber(framerate, handle_note)
     transcriber.process(data)
 
 """
