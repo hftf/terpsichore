@@ -36,8 +36,6 @@ class Transcriber:
         np.concatenate((self.buffer, data))
         while self.samplestart + SAMPLESIZE < len(data):
             sample = data[self.samplestart:self.samplestart+SAMPLESIZE]
-            #sample = sample * [np.exp(-np.pi * np.square(x - len(sample)/2)/100)
-            #                   for x in np.arange(len(sample))]
             f = sorted(fourier(sample, self.framerate),
                        key=operator.itemgetter(1), reverse=True)
             cs = [(freq2note(x[0]), x[1]) for x in f[:10] if x[1] > 10]
@@ -70,7 +68,6 @@ def handle_note(n, start, dur):
     print('{} ({}) from {} for {}s'.format(note, octave, start, dur))
 
 if __name__ == '__main__':
-
     parser = argparse.ArgumentParser()
     parser.add_argument('wav', type=str, help='audio file')
     args = parser.parse_args()
@@ -89,60 +86,3 @@ if __name__ == '__main__':
 
     transcriber = Transcriber(framerate, handle_note)
     transcriber.process(data)
-
-"""
-    samplesize = 4400
-    samplestart = 0
-    current = {}
-    while samplestart + samplesize < len(data):
-        sample = data[samplestart:samplestart+samplesize]
-        f = sorted(fourier(sample, fr), key=operator.itemgetter(1), reverse=True)
-        cs = [(freq2note(x[0]), x[1]) for x in f[:10] if x[1] > 10]
-        cs = [x for x in cs if x[1] > cs[0][1] / 2]
-
-        notes = [c[0] for c in cs]
-        kill = []
-
-        for note in current:
-            if not note in notes:
-                dur = current[note] * samplesize/2 / fr
-                if dur > 0.8:
-                    print('{} {}'.format(note, dur))
-                kill.append(note)
-        for k in kill:
-            del(current[k])
-        for note in notes:
-            if note in current:
-                current[note] = current[note] + 1
-            else:
-                current[note] = 1
-        samplestart += samplesize/2
-"""
-"""
-        f = list(fourier(sample, fr))
-        plt.plot([x[0] for x in f], [x[1] for x in f])
-        plt.xlim([0, 1000])
-        plt.show()
-        plt.cla()
-        plt.clf()
-        plt.close()
-"""
-"""
-        ns = [n[2] for n in notes]
-        for x in range(-30, 30):
-            if x in ns:
-                sys.stdout.write(NOTES[x%12][-1])
-            else:
-                sys.stdout.write(' ')
-        sys.stdout.write('\n')
-"""
-
-
-
-"""
-        f = list(fourier(sample, samplesize))
-        plt.plot([x[0] for x in f], [x[1] for x in f])
-        plt.xlim([0, 1200])
-        #plt.show()
-        """
-
