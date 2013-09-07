@@ -23,6 +23,10 @@ def freq2note(f):
 
 SAMPLESIZE = 4400
 
+def handle_note(n, start, dur):
+    (note, octave, off) = n
+    print('{} ({}) from {} for {}s'.format(note, octave, start, dur))
+
 class Transcriber:
     def __init__(self, framerate, add_note):
         self.framerate = framerate
@@ -66,10 +70,6 @@ class Transcriber:
 
             # Advance
             self.samplestart += SAMPLESIZE/2
-
-def handle_note(n, start, dur):
-    (note, octave, off) = n
-    print('{} ({}) from {} for {}s'.format(note, octave, start, dur))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
