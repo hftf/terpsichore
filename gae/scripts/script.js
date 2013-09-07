@@ -18,7 +18,7 @@ $(document).ready(function() {
 	}
 
 	$('.record').click(function(){
-		recorder && recorder.clear() && recorder.record();
+		recorder && recorder.record();
 		$(this).attr('disabled','disabled');
 		$('.stop').removeAttr('disabled')
 		console.log('recording')
@@ -38,14 +38,7 @@ $(document).ready(function() {
 });
 
 function startStream(stream) {
-	inputPoint = audio_context.createGain();
 	var input = audio_context.createMediaStreamSource(stream);
-	input.connect(inputPoint);
-
-	recorder = new Recorder(inputPoint);
-
-	zeroGain = audio_context.createGain();
-    zeroGain.gain.value = 0.0;
-    inputPoint.connect(zeroGain);
-    zeroGain.connect(audio_context.destination);
+	input.connect(audio_context.destination);
+	recorder = new Recorder(input);
 }
