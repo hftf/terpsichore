@@ -33,14 +33,6 @@ class AboutPage(webapp2.RequestHandler):
 		self.response.headers['Content-Type'] = 'text/plain'
 		self.response.write('who we are, what we did')
 
-class RecordPage(webapp2.RequestHandler):
-	def get(self):
-		self.response.headers['Content-Type'] = 'text/html; charset=utf-8'
-		main = open("web/omg.html", "r")
-		for l in main:
-			self.response.write(l)
-		main.close()
-
 class UploadHandler(blobstore_handlers.BlobstoreUploadHandler):
 	def post(self):
 		upload_files = self.get_uploads('file')  # 'file' is file upload field in the form
@@ -51,7 +43,9 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 	def get(self, resource):
 		resource = str(urllib.unquote(resource))
 		blob_info = blobstore.BlobInfo.get(resource)
+#		play what you uploaded
 		self.send_blob(blob_info)
+		
 
 application = webapp2.WSGIApplication([
 #	define the page tree here
@@ -60,5 +54,4 @@ application = webapp2.WSGIApplication([
 	('/about', AboutPage),
 	('/upload', UploadHandler),
 	('/serve/([^/]+)?', ServeHandler),
-	('/record', RecordPage),
 ], debug=True)
