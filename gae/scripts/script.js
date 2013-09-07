@@ -32,8 +32,7 @@ $(document).ready(function() {
 	});
 	$('.download').click(function(){
 		recorder && recorder.exportWAV(function(sound){
-			var url = URL.createObjectURL(sound);
-			console.log(url);
+			Recorder.forceDownload(sound, 'recoring001.wav');
 		});
 	});
 });
