@@ -4,6 +4,7 @@ import re
 
 from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
+from google.appengine.api import channel
 
 # portal, in other words, index.html
 class MainPage(webapp2.RequestHandler):
@@ -21,6 +22,7 @@ class MainPage(webapp2.RequestHandler):
 			else:
 				self.response.write(l)
 		main.close()
+	
 
 # womp - just taking space
 class DevPage(webapp2.RequestHandler):
@@ -43,9 +45,14 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 	def get(self, resource):
 		resource = str(urllib.unquote(resource))
 		blob_info = blobstore.BlobInfo.get(resource)
+		blobkey = blob_info.key()
 #		play what you uploaded
-		self.send_blob(blob_info)
-		
+		#self.send_blob(blob_info)
+#		now send the bytestream
+		blob_reader = blobstore.BlobReader(blobkey)
+		value = blob_reader.read()
+		self.response.headers['Content-Type'] = 'text/plain'
+		self.response.write(str(value))
 
 application = webapp2.WSGIApplication([
 #	define the page tree here
