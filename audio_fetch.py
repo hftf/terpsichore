@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import sys
 import terpsichore
 import wave
 import numpy as np
@@ -10,6 +11,7 @@ class UploadFile():
 		self.f = StringIO(f)
                 self.wave = wave.open(self.f)
                 self.parse()
+
 	def parse(self):
  		if self.wave.getnchannels() != 1:
  			print("Too many channels!")
