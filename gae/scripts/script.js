@@ -4,7 +4,7 @@ var recorder;
 $(document).ready(function() {
 
 	try {
-		window.AudioContext = window.AudioContext || window.webkitAudioContext || window.;
+		window.AudioContext = window.AudioContext || window.webkitAudioContext || navigator.mozGetUserMedia;
 		navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 		window.URL = window.URL || window.webkitURL;
 
@@ -19,15 +19,15 @@ $(document).ready(function() {
 
 	$('.record').click(function(){
 		recorder && recorder.record();
-		$(this).disabled = true;
-		$('.stop').disabled = false;
+		$(this).attr('disabled','disabled');
+		$('.stop').removeAttr('disabled')
 		console.log('recording')
 
 	});
 	$('.stop').click(function(){
 		recorder && recorder.stop();
-		$(this).disabled = true;
-		$('.record').disabled = false;
+		$(this).attr('disabled','disabled');
+		$('.record').removeAttr('disabled')
 		console.log('stopped')
 	});
 	$('.download').click(function(){
