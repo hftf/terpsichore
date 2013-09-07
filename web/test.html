@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html>
     <head>
-		<title>Recording</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Recording</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <link rel='stylesheet' type='text/css' href='/style/stylesheet.css'/>
+        <script src="http://cwilso.github.io/AudioContext-MonkeyPatch/AudioContextMonkeyPatch.js"></script>
         <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
-		<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-		<script src="../scripts/recorder.js"></script>
-		<script src="../scripts/script.js"></script>
-		<!--INSERT-CHANNEL-->
-	</head>
-	<body>
-		<h1> Recorder.js WAV Export demo </h1>
+        <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+        <script src="../scripts/recorder.js"></script>
+        <script src="../scripts/test.js"></script>
+    </head>
+    <body>
+        <h1> Recorder.js WAV Export demo </h1>
 
-	<div style="float left;">
-		<button class="record" type='button'>Record</button>
-		<button class="stop" type='button'>Stop</button>
-		<button class="download" type='button'>Download</button>
-	</div>
-	<div style="float right;">
-		<!--INSERT-SUBMIT-->
-	</div>
-	</body>
+    <div style="float left;">
+            <button class="record" type='button' onclick="toggleRecording(this);">Record</button>
+            <button class="stop" type='button'>Stop</button>
+            <button class="download" onclick="saveAudio();">Download</button>
+            <canvas id="analyser" width="768" height="200"></canvas><br>
+            <canvas id="wavedisplay" width="768" height="200"></canvas><br
+    </div>
+    <div style="float right;">
+        <!--INSERT-SUBMIT-->
+    </div>
+    </body>
 </html>
