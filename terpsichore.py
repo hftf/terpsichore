@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python2
 
 import argparse
 import numpy as np
@@ -7,18 +7,16 @@ import operator
 import sys
 import wave
 
-import matplotlib.pyplot as plt
-
 def fourier(wave, fr):
     return zip([x * fr for x in fft.fftfreq(len(wave)) if x > 0], np.absolute(fft.rfft(wave).real[1:]))
 
 NOTES = ['a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#']
 
 def freq2note(f):
-    l = np.log(f / 440) / np.log(np.power(2, 1/12))
+    l = np.log(f / 440.) / np.log(np.power(2, 1/12.))
     n = np.int(np.round(l))
     note = NOTES[np.mod(n, 12)]
-    octave = np.int(n / 12) + 4
+    octave = np.int(n / 12.) + 4
     cents = np.round(100 * (l - n))
     return (note, octave, n)
 
@@ -39,7 +37,7 @@ class Transcriber:
             f = sorted(fourier(sample, self.framerate),
                        key=operator.itemgetter(1), reverse=True)
             cs = [(freq2note(x[0]), x[1]) for x in f[:10] if x[1] > 10]
-            cs = [x for x in cs if x[1] > cs[0][1] / 5]
+            cs = [x for x in cs if x[1] > cs[0][1] / 5.]
 
             # Send and kill ended notes
             notes = [c[0] for c in cs]
@@ -48,7 +46,7 @@ class Transcriber:
                 if not note in notes:
                     dur = self.current[note] / self.framerate
                     if dur > 0.2:
-                        self.add_note(note, self.samplestart / self.framerate - dur, dur)
+                        self.add_note(note, self.samplestart / float(self.framerate) - dur, dur)
                     kill.append(note)
             for k in kill:
                 del(self.current[k])
@@ -56,9 +54,9 @@ class Transcriber:
             # Register new notes
             for note in set(notes):
                 if note in self.current:
-                    self.current[note] = self.current[note] + SAMPLESIZE/2
+                    self.current[note] += SAMPLESIZE/2.
                 else:
-                    self.current[note] = 0
+                    self.current[note] = 0.
 
             # Advance
             self.samplestart += SAMPLESIZE/2
