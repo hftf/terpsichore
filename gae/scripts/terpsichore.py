@@ -5,6 +5,7 @@ import numpy as np
 import numpy.fft as fft
 import operator
 import sys
+import scipy as sp
 import wave
 
 def fourier(wave, fr):
