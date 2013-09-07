@@ -53,7 +53,7 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 #		now send the bytestream
 		blob_reader = blobstore.BlobReader(blobkey)
 		value = blob_reader.read()
-			
+		data = audio_fetch.UploadFile(value)		
 
 application = webapp2.WSGIApplication([
 #	define the page tree here
