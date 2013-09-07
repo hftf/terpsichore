@@ -37,28 +37,22 @@ class Transcriber:
         while self.samplestart + SAMPLESIZE < len(data):
             sample = data[self.samplestart:self.samplestart+SAMPLESIZE]
 
-            #print(sig.find_peaks_cwt(sample, np.array([1] * len(sample))))
-
             freqs = np.array([x * self.framerate
                               for x in fft.fftfreq(len(sample)) if x > 0])
             spectrum = np.absolute(fft.rfft(sample).real[1:])
 
             maxes = sig.argrelmax(spectrum, order=4, axis=0)[0]
             maxes = sorted(maxes, key=lambda i:spectrum[i], reverse=True)
-            #print(freqs[maxes[:10]])
+            maxes = [m for m in maxes if spectrum[m] > spectrum[maxes][0]/2.]
 
-            f = sorted(fourier(sample, self.framerate),
-                       key=operator.itemgetter(1), reverse=True)
-            cs = [(freq2note(x[0]), x[1]) for x in f[:10] if x[1] > 10]
-            cs = [x for x in cs if x[1] > cs[0][1] / 5.]
+            notes = [freq2note(freqs[m]) for m in maxes]
 
             # Send and kill ended notes
-            notes = [c[0] for c in cs]
             kill = []
             for note in self.current:
                 if not note in notes:
                     dur = self.current[note] / self.framerate
-                    if dur > 0.2:
+                    if dur > 0.0002:
                         self.add_note(note, self.samplestart / float(self.framerate) - dur, dur)
                     kill.append(note)
             for k in kill:
