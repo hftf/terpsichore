@@ -36,26 +36,33 @@ class Transcriber:
         np.concatenate((self.buffer, data))
         while self.samplestart + SAMPLESIZE < len(data):
             sample = data[self.samplestart:self.samplestart+SAMPLESIZE]
+            #sample = sample * [np.exp(-np.pi * np.square(x - len(sample)/2)/100)
+            #                   for x in np.arange(len(sample))]
             f = sorted(fourier(sample, self.framerate),
                        key=operator.itemgetter(1), reverse=True)
             cs = [(freq2note(x[0]), x[1]) for x in f[:10] if x[1] > 10]
-            cs = [x for x in cs if x[1] > cs[0][1] / 2]
+            cs = [x for x in cs if x[1] > cs[0][1] / 5]
 
+            # Send and kill ended notes
             notes = [c[0] for c in cs]
             kill = []
-
             for note in self.current:
                 if not note in notes:
-                    dur = self.current[note] * SAMPLESIZE/2 / self.framerate
-                    self.add_note(note, self.samplestart / self.framerate - dur, dur)
+                    dur = self.current[note] / self.framerate
+                    if dur > 0.2:
+                        self.add_note(note, self.samplestart / self.framerate - dur, dur)
                     kill.append(note)
             for k in kill:
                 del(self.current[k])
-            for note in notes:
+
+            # Register new notes
+            for note in set(notes):
                 if note in self.current:
-                    self.current[note] = self.current[note] + 1
+                    self.current[note] = self.current[note] + SAMPLESIZE/2
                 else:
-                    self.current[note] = 1
+                    self.current[note] = 0
+
+            # Advance
             self.samplestart += SAMPLESIZE/2
 
 def handle_note(n, start, dur):
