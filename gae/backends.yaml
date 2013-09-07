@@ -3,3 +3,6 @@ backends:
 # - name
 # class: determine memory and cost ($$$)
 # instances: 
+# options: dynamic/resident
+
+# here is where we should be running the live recording application
