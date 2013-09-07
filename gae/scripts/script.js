@@ -44,7 +44,7 @@ function startStream(stream) {
 
 	recorder = new Recorder(inputPoint);
 
-	zeroGain = audioContext.createGain();
+	zeroGain = audio_context.createGain();
     zeroGain.gain.value = 0.0;
     inputPoint.connect(zeroGain);
     zeroGain.connect(audio_context.destination);
