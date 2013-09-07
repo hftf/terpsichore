@@ -5,6 +5,7 @@ import numpy as np
 import numpy.fft as fft
 import operator
 import scipy as sp
+import scipy.signal as sig
 import sys
 import wave
 
@@ -35,6 +36,17 @@ class Transcriber:
         np.concatenate((self.buffer, data))
         while self.samplestart + SAMPLESIZE < len(data):
             sample = data[self.samplestart:self.samplestart+SAMPLESIZE]
+
+            #print(sig.find_peaks_cwt(sample, np.array([1] * len(sample))))
+
+            freqs = np.array([x * self.framerate
+                              for x in fft.fftfreq(len(sample)) if x > 0])
+            spectrum = np.absolute(fft.rfft(sample).real[1:])
+
+            maxes = sig.argrelmax(spectrum, order=4, axis=0)[0]
+            maxes = sorted(maxes, key=lambda i:spectrum[i], reverse=True)
+            #print(freqs[maxes[:10]])
+
             f = sorted(fourier(sample, self.framerate),
                        key=operator.itemgetter(1), reverse=True)
             cs = [(freq2note(x[0]), x[1]) for x in f[:10] if x[1] > 10]
