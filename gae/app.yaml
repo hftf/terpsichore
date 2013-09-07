@@ -10,6 +10,9 @@ handlers:
 - url: /scripts
   static_dir: scripts
 
+- url: /style
+  static_dir: style
+
 - url: /.*
   script: driver.application
 
