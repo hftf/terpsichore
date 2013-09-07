@@ -4,8 +4,7 @@ import argparse
 import numpy as np
 import numpy.fft as fft
 import operator
-import scipy as sp
-import scipy.signal as sig
+import signals as sig
 import sys
 import wave
 
