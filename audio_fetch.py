@@ -11,8 +11,7 @@ class UploadFile():
 				self.wave = wave.open(self.file)
 				self.parse()
 			except:
-				print("could not open wave file")
-				sys.exit(1)
+				raise Exception("could not read wave")
 	def parse(self):
  		if self.wave.getnchannels() != 1:
  			print("Too many channels!")
