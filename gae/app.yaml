@@ -1,0 +1,10 @@
+# until we register the app, we do not need to set the id
+application: my-app-id 
+version: 1
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /.*
+  script: driver.application
