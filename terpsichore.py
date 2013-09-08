@@ -52,18 +52,6 @@ class Transcriber:
             spectrum = sorted(spectrum, key=operator.itemgetter(1), reverse=True)
             strong = [s[0] for s in spectrum if s[1] > spectrum[0][1]/16]
 
-            """
-            freqs = np.array([x * self.framerate
-                              for x in fft.fftfreq(len(sample)) if x > 0])
-            spectrum = np.absolute(fft.rfft(sample).real[1:])
-
-            maxes = sig.argrelmax(spectrum, order=4, axis=0)[0]
-            maxes = sorted(maxes, key=lambda i:spectrum[i], reverse=True)
-            top = [m for m in maxes if spectrum[m] > spectrum[maxes][0]/2.]
-
-            notes = [freq2note(freqs[i]) for i in top]
-            extra = [freq2note(freqs[i]) for i in maxes]
-            """
 
             top = [s[0] for s in spectrum if s[1] > spectrum[0][1]/4]
             notes = [freq2note(s) for s in top[:1]]
@@ -97,26 +85,6 @@ class Transcriber:
             
             # Advance
             self.samplestart += SAMPLESIZE/2
-
-"""
-            # Send and kill ended notes
-            kill = []
-            for note in self.current:
-                if not note in notes:
-                    dur = self.current[note] / self.framerate
-                    if dur > 0.05:
-                        self.add_note(note, self.samplestart / float(self.framerate) - dur, dur)
-                    kill.append(note)
-            for k in kill:
-                del(self.current[k])
-
-            # Register new notes
-            for note in set(notes):
-                if note in self.current:
-                    self.current[note] += SAMPLESIZE/2.
-                else:
-                    self.current[note] = 0.
-                    """
 
 
 if __name__ == '__main__':
