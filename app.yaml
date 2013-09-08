@@ -13,6 +13,9 @@ handlers:
 - url: /css
   static_dir: css
 
+- url: /fonts
+  static_dir: fonts
+
 - url: /bootstrap
   static_dir: bootstrap
 

@@ -1,7 +1,10 @@
+@import url(../fonts/Whitney/whitney.css);
+
 .demo-logo {
 	text-align: center;
-	font-weight: normal;	
-	font-family: 'Whitney Light';
+	font-weight: normal;
+	font-family: 'Whitney';
+	font-weight: 300;
 }
 
 body {

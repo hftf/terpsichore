@@ -1,0 +1,72 @@
+@font-face {
+	font-family: 'Whitney';
+	font-weight: 900;
+	font-style: normal;
+	src: url(Whitney-Black.otf);
+}
+@font-face {
+	font-family: 'Whitney';
+	font-weight: 900;
+	font-style: italic;
+	src: url(Whitney-BlackItalic.otf);
+}
+@font-face {
+	font-family: 'Whitney';
+	font-weight: 700;
+	font-style: normal;
+	src: url(Whitney-Bold.otf);
+}
+@font-face {
+	font-family: 'Whitney';
+	font-weight: 700;
+	font-style: italic;
+	src: url(Whitney-BoldItalic.otf);
+}
+@font-face {
+	font-family: 'Whitney';
+	font-weight: 500;
+	font-style: normal;
+	src: url(Whitney-Book.otf);
+}
+@font-face {
+	font-family: 'Whitney';
+	font-weight: 500;
+	font-style: italic;
+	src: url(Whitney-BookItalic.otf);
+}
+@font-face {
+	font-family: 'Whitney';
+	font-weight: 300;
+	font-style: normal;
+	src: url(Whitney-Light.otf);
+}
+@font-face {
+	font-family: 'Whitney';
+	font-weight: 300;
+	font-style: italic;
+	src: url(Whitney-LightItalic.otf);
+}
+@font-face {
+	font-family: 'Whitney';
+	font-weight: 400;
+	font-style: normal;
+	src: url(Whitney-Medium.otf);
+}
+@font-face {
+	font-family: 'Whitney';
+	font-weight: 400;
+	font-style: italic;
+	src: url(Whitney-MediumItalic.otf);
+}
+@font-face {
+	font-family: 'Whitney';
+	font-weight: 600;
+	font-style: normal;
+	src: url(Whitney-Semibold.otf);
+}
+@font-face {
+	font-family: 'Whitney';
+	font-weight: 600;
+	font-style: italic;
+	src: url(Whitney-SemiboldItalic.otf);
+}
