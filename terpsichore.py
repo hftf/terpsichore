@@ -56,7 +56,7 @@ class Transcriber:
 
             kill = [] # List of notes to forget permanently
 
-            # Kill off harmonics (will harm chords)
+            # TODO Kill off harmonics (will harm chords)
 
             for note in self.playing:
                 if not note in extra:
