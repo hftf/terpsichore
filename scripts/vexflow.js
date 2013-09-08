@@ -2,7 +2,7 @@ var canvas = document.getElementById("vexflow-canvas");
 var renderer = new Vex.Flow.Renderer(canvas, Vex.Flow.Renderer.Backends.CANVAS);
 
 var ctx = renderer.getContext();
-var stave = new Vex.Flow.Stave(10, 0, 960);
+var stave = new Vex.Flow.Stave(10, 60, 960);
 
 // Add a treble clef
 stave.addClef("treble");
@@ -27,6 +27,9 @@ var notes = [
 ];
 
 function addNote(data) {
+    if (data.length == 0)
+        return;
+
     var note     = data[0][0][0];
     var octave   = data[0][0][1];
     var duration = data[0][2];

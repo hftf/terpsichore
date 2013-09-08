@@ -23,12 +23,14 @@ function toggleRecording( e ) {
     if (e.classList.contains("recording")) {
         // stop recording
         audioRecorder.stop();
+        e.innerHTML = 'Record';
         e.classList.remove("recording");
 
     } else {
         // start recording
         if (!audioRecorder)
             return;
+        e.innerHTML = 'Recording…';
         e.classList.add("recording");
         $.ajax({
             'type' : 'POST',
