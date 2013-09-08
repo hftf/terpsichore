@@ -60,15 +60,21 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 
 # when you press the record button you activate this handler
 class RecordHandler(webapp2.RequestHandler):
-    def get(self):
+    def post(self):
 #       TODO, lazy attempt to create unique ids upon connection
         token = channel.create_channel(random.getrandbits(16))
 #       telling the client who they are
-        template_values = { 'token': token}
+        template_values = {'token': token}
 #       give the client its info to setup the connection
         self.response.out(template_values)
 #       send the client to his/her own page for viewing
         self.redirect('record/%s' % token)
+
+# TODO, hanging out here, hopefully notes should begin to appear
+class RecordViewer(webapp2.RequestHandler):
+    def get(self):
+        self.response.headers['Content-Type'] = 'text/html'
+        self.response.out.write("yo")
 
 #   what to do everytime the client gives me a new chunk of audio data
     def post(self):
@@ -79,12 +85,6 @@ class RecordHandler(webapp2.RequestHandler):
             sys.exit(0)
 #       parse this chunk of audio data, TODO
         data = audio_fetch.TerpsWrap(value)
-
-# TODO, hanging out here, hopefully notes should begin to appear
-class RecordViewer(webapp2.RequestHandler):
-        def get(self):
-            self.response.headers['Content-Type'] = 'text/html'
-            self.response.out.write("yo")
 
 application = webapp2.WSGIApplication([
 #   define the page tree here
