@@ -9,7 +9,7 @@ import wave
 
 NOTES = ['a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#']
 
-FREQS = [440 * np.power(2, x/12.) for x in range(-24, 14)]
+FREQS = [440 * np.power(2, x/12.) for x in range(-24, 24)]
 
 def freq2note(f):
     l = np.log(f / 440.) / np.log(np.power(2, 1/12.))
