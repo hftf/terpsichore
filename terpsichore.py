@@ -87,7 +87,7 @@ class Transcriber:
         beats = dur / self.tempo
         tempo = self.tempo
         length = 16
-        if beats > 7/8. and beats < 3/2.:
+        if beats > 7/8.:
             tempo = (3 * tempo + beats * tempo)/4
             length = 1
         if beats > 7/16. and beats < 7/8.:
