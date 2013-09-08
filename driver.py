@@ -63,10 +63,7 @@ class RecordHandler(webapp2.RequestHandler):
     def post(self):
 #       TODO, lazy attempt to create unique ids upon connection
         token = channel.create_channel(random.getrandbits(16))
-#       telling the client who they are
-        template_values = {'token': token}
-#       give the client its info to setup the connection
-        self.response.out(template_values)
+        self.response.out(token)
 #       send the client to his/her own page for viewing
         self.redirect('record/%s' % token)
 
