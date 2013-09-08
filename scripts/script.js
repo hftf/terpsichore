@@ -22,6 +22,7 @@ var rafID = null;
 var analyserContext = null;
 var canvasWidth, canvasHeight;
 var recIndex = 0;
+var myId = 0;
 
 /* TODO:
 
@@ -51,26 +52,33 @@ function toggleRecording( e ) {
         // stop recording
         audioRecorder.stop();
         e.classList.remove("recording");
-        audioRecorder.getBuffers( drawWave );
+
     } else {
         // start recording
-        alert('recording pressed');
         if (!audioRecorder)
             return;
         e.classList.add("recording");
         $.ajax({
-            'url' : '/record',
             'type' : 'POST',
+            'url' : '/record',
             'success' : function(data) {
-               if (data == "success") {
-                alert('request sent!');
-                
-                channel = new goog.appengine.Channel('{{ token }}');
+                channel = new goog.appengine.Channel(data.toString());
+
                 socket = channel.open();
+                myId = socket.applicationKey_;
+
+                socket.onopen = onOpened;
+                socket.onmessage = onMessage;
+                socket.onclose = onClose;
+                socket.onerror = onError;
+
                 audioRecorder.clear();
                 audioRecorder.record();
-               }
-           }
+               },
+            'error' : function(jqXHR, textStatus, errorThrown) {
+                alert('AJAX FAILED');
+            }
+           
         });
     }
 }

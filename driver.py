@@ -61,27 +61,13 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 # when you press the record button you activate this handler
 class RecordHandler(webapp2.RequestHandler):
     def post(self):
-#       TODO, lazy attempt to create unique ids upon connection
-        token = channel.create_channel(random.getrandbits(16))
-        self.response.out(token)
+        print self.request.get('data')
+        rand = random.getrandbits(16)
+        token = channel.create_channel(str(rand))
+        self.response.headers['Content-Type'] = 'text/plain'
+        self.response.out.write(str(token))
 #       send the client to his/her own page for viewing
-        self.redirect('record/%s' % token)
-
-# TODO, hanging out here, hopefully notes should begin to appear
-class RecordViewer(webapp2.RequestHandler):
-    def get(self):
-        self.response.headers['Content-Type'] = 'text/html'
-        self.response.out.write("yo")
-
-#   what to do everytime the client gives me a new chunk of audio data
-    def post(self):
-        value = self.request.get('chunk')
-        if data == None:
-            print("the chunk of data sent to me was None")
-#           EOF
-            sys.exit(0)
-#       parse this chunk of audio data, TODO
-        data = audio_fetch.TerpsWrap(value)
+        #self.redirect('record/%s' % token)
 
 application = webapp2.WSGIApplication([
 #   define the page tree here
@@ -90,6 +76,15 @@ application = webapp2.WSGIApplication([
     ('/about', AboutPage),
     ('/upload', UploadHandler),
     ('/serve/([^/]+)?', ServeHandler),
-    ('/record', RecordHandler),
-    ('/record/([\d+])', RecordViewer),
+    ('/record', RecordHandler)
 ], debug=True)
+
+""" #       TODO, lazy attempt to create unique ids upon connection
+        value = self.request.get('chunk')
+        if data == None:
+            print("the chunk of data sent to me was None")
+#           EOF
+            sys.exit(0)
+#       parse this chunk of audio data, TODO
+        data = audio_fetch.TerpsWrap(value)
+"""

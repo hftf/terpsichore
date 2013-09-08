@@ -26,7 +26,9 @@
           e.inputBuffer.getChannelData(1)
         ]
       });
-      
+      if(recording){
+        postArray(e.inputBuffer.getChannelData(0));
+      }
     }
 
     this.configure = function(cfg){
