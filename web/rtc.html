@@ -2,6 +2,8 @@
 <html>
 <head>
     <title>Recording</title>
+    <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/css/flat-ui.css" rel="stylesheet">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <link rel='stylesheet' type='text/css' href='/style/stylesheet.css'/>
     <script src="http://cwilso.github.io/AudioContext-MonkeyPatch/AudioContextMonkeyPatch.js"></script>
@@ -14,12 +16,23 @@
 </head>
 <body>
 
-<h1>Terpsichore</h1>
+<h1 class='demo-logo'>Terpsichore</h1>
 
-<div style="float left;">
-    <button class="record" type='button' onclick="toggleRecording(this);">Record</button>
-    <button class="download" onclick="saveAudio();">Download</button>
+<div style="float left;" class ="row">
+    <div class="span3 offset3"><button class="record btn btn-large btn-block btn-primary" onclick="toggleRecording(this);">Record</a></div>
+    <div class="span3"><button class="stop btn btn-large btn-block btn-danger">Stop</a></div>
 </div>
-<div style="float right;"><!--INSERT-SUBMIT--></div>
+<div class="row">
+    <div class="span2 offset5">
+        <button class="download btn btn-large btn-block btn-info" onclick="saveAudio();">Download</button>
+</div>
+<div class="row">
+    <div class="span6 offset3">
+        <div style="float center;"><!--INSERT-SUBMIT--></div>
+    </div>
+</div>
+<div class="row">
+    <div class="tile span8 offset2" style="height:500px"><br\><br\><br\><br\><br\><br\><br\><br\></div>
+    </div>
 </body>
 </html>

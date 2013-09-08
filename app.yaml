@@ -10,6 +10,15 @@ handlers:
 - url: /scripts
   static_dir: scripts
 
+- url: /css
+  static_dir: css
+
+- url: /bootstrap
+  static_dir: bootstrap
+
+- url: /js
+  static_dir: js
+
 - url: /style
   static_dir: style
 
