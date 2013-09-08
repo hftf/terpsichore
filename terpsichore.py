@@ -2,14 +2,10 @@
 
 import argparse
 import numpy as np
-import numpy.fft as fft
 import operator
 import signals as sig
 import sys
 import wave
-
-def fourier(wave, fr):
-    return zip([x * fr for x in fft.fftfreq(len(wave)) if x > 0], np.absolute(fft.rfft(wave).real[1:]))
 
 NOTES = ['a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#']
 
@@ -25,18 +21,19 @@ def freq2note(f):
 
 SAMPLESIZE = 2200
 
-def handle_note(n, start, dur):
+def handle_note(n, start, length, _):
     (note, octave, off) = n
-    print('{} ({}) from {} for {}s'.format(note, octave, start, dur))
+    print('{}{} ({}) from {}'.format(note, length, octave, start))
 
 class Transcriber:
-    def __init__(self, framerate, add_note):
+    def __init__(self, framerate, add_note, tempo = 26):
         self.framerate = framerate
         self.add_note = add_note
         self.buffer = np.array([], dtype=np.int16)
         self.samplestart = 0
+        self.tempo = 60. / tempo
+        self.beat = 0
         self.playing = {}
-        self.current = {}
 
     def process(self, data):
         np.concatenate((self.buffer, data))
@@ -70,7 +67,7 @@ class Transcriber:
                         kill.append(note)
                     elif self.samplestart - end > SAMPLESIZE:
                         dur = float(self.playing[note]['end'] - self.playing[note]['start'])/framerate
-                        self.add_note(note, self.samplestart / float(self.framerate) - dur, dur)
+                        self.give_note(note, self.samplestart / float(self.framerate) - dur, dur)
                         kill.append(note)
 
             for k in kill:
@@ -86,6 +83,24 @@ class Transcriber:
             # Advance
             self.samplestart += SAMPLESIZE/2
 
+    def give_note(self, note, start, dur):
+        beats = dur / self.tempo
+        tempo = self.tempo
+        length = 16
+        if beats > 7/8. and beats < 3/2.:
+            tempo = (3 * tempo + beats * tempo)/4
+            length = 1
+        if beats > 7/16. and beats < 7/8.:
+            tempo = (3 * tempo + beats * tempo * 2)/4
+            length = 2
+        if beats > 7/32. and beats < 7/16.:
+            tempo = (3 * tempo + beats * tempo * 4)/4
+            length = 4
+        if beats > 7/64. and beats < 7/32.:
+            tempo = (3 * tempo + beats * tempo * 8)/4
+            length = 8
+        self.tempo = tempo
+        self.add_note(note, start, length, (start, dur))
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
