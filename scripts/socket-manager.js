@@ -12,8 +12,8 @@ postArray = function(array) {
         'type' : 'POST',
         'url' : '/record',
         'data' : {'data': string, 'token' : myToken, 'flag' : 'ok'},
-        success : function(data){
-            console.log(data)
+        success : function(data) {
+            addNote(JSON.parse(data));
         }
     });
 };

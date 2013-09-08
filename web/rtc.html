@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Recording</title>
-    <link href="/bootstrap/css/bootstrap.css" rel="stylesheet">
-    <link href="/css/flat-ui.css" rel="stylesheet">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <link rel='stylesheet' type='text/css' href='/style/stylesheet.css'/>
+    <title>Terpsichore</title>
+    <meta charset="utf-8" />
+    <link href="/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="/css/flat-ui.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="/style/stylesheet.css" />
     <script src="http://cwilso.github.io/AudioContext-MonkeyPatch/AudioContextMonkeyPatch.js"></script>
     <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
     <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
@@ -13,27 +13,30 @@
     <script src="/scripts/recorder.js"></script>
     <script src="/scripts/script.js"></script>
     <script src="/scripts/socket-manager.js"></script>
+
+    <script src="/scripts/vendor/vexflow/vexflow-min.js"></script>
 </head>
 <body>
+    <main class="container">
+        <div class="row">
+            <h1 class="demo-logo">Terpsichore</h1>
+        </div>
 
-<div class="row">
-    <div class="span4 offset5">
-    <h1 class="demo-logo">Terpsichore</h1>
-</div>
-</div>
+        <div class="row">
+            <div class="span2 offset4"><button class="record btn btn-large btn-block btn-primary" onclick="toggleRecording(this);">Record</button></div>
+            <div class="span2">        <button class="stop   btn btn-large btn-block btn-info">Upload</button></div>
+        </div><!-- 
 
-<div style="float left;" class ="row">
-    <div class="span2 offset6"><button class="record btn btn-large btn-block btn-primary" onclick="toggleRecording(this);">Record</a></div>
-    <div class="span2"><button class="stop btn btn-large btn-block btn-info">Upload</a></div>
-</div>
+        <div class="row">
+            <div class="span6">
+                <div style="float center;"><!- -INSERT-SUBMIT- -></div>
+            </div>
+        </div> -->
 
-<div class="row">
-    <div class="span6 offset5">
-        <div style="float center;"><!--INSERT-SUBMIT--></div>
-    </div>
-</div>
-<div class="row">
-    <div class="tile" style="height:500px"></div>
-    </div>
+        <div class="row">
+            <canvas width="960" height="400" id="vexflow-canvas"></canvas>
+            <script type="text/javascript" src="scripts/vexflow.js"></script>
+        </div>
+    </main>
 </body>
 </html>

@@ -2,6 +2,7 @@ import webapp2
 import urllib
 import re
 import random
+import json
 
 import audio_fetch
 from terpsichore import Transcriber
@@ -70,8 +71,7 @@ class RecordHandler(webapp2.RequestHandler):
             token = channel.create_channel(str(rand))
             transcribers[token] = Transcriber(48000, self.note_adder(token))
             notes[token] = []
-            self.response.headers['Content-Type'] = 'text/plain'
-            self.response.out.write(str(token))
+            respdata = str(token)
         else:
             token = self.request.get('token')
             rawData = self.request.get('data').split(';')
@@ -82,11 +82,14 @@ class RecordHandler(webapp2.RequestHandler):
                 else:
                     rawData[i] = int(rawData[i])
             transcriber.process(rawData)
-            self.response.headers['Content-Type'] = 'text/plain'
             if notes[token] != []:
                 print notes[token]
-            self.response.out.write(notes[token])
+
+            respdata = json.dumps(notes[token])
             notes[token] = []
+
+        self.response.headers['Content-Type'] = 'text/plain'
+        self.response.out.write(respdata)
     def note_adder(self, token):
         return lambda n, start, length, _: notes[token].append((n, start, length))
 
