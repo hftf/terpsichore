@@ -26,6 +26,7 @@
           e.inputBuffer.getChannelData(1)
         ]
       });
+      
     }
 
     this.configure = function(cfg){

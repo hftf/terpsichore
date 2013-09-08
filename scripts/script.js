@@ -54,11 +54,24 @@ function toggleRecording( e ) {
         audioRecorder.getBuffers( drawWave );
     } else {
         // start recording
+        alert('recording pressed');
         if (!audioRecorder)
             return;
         e.classList.add("recording");
-        audioRecorder.clear();
-        audioRecorder.record();
+        $.ajax({
+            'url' : '/record',
+            'type' : 'POST',
+            'success' : function(data) {
+               if (data == "success") {
+                alert('request sent!');
+                
+                channel = new goog.appengine.Channel('{{ token }}');
+                socket = channel.open();
+                audioRecorder.clear();
+                audioRecorder.record();
+               }
+           }
+        });
     }
 }
 
