@@ -1,6 +1,7 @@
 import webapp2
 import urllib
 import re
+import random
 
 import audio_fetch
 
@@ -53,9 +54,37 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
 #       now send the bytestream
         blob_reader = blobstore.BlobReader(blobkey)
         value = blob_reader.read()
-        data = audio_fetch.UploadFile(value)
+        data = audio_fetch.TerpsWrap(value)
         self.response.headers['Content-Type'] = 'text/plain'
         self.response.out.write(data.notes)
+
+# when you press the record button you activate this handler
+class RecordHandler(webapp2.RequestHandler):
+    def get(self):
+#       TODO, lazy attempt to create unique ids upon connection
+        token = channel.create_channel(random.getrandbits(16))
+#       telling the client who they are
+        template_values = { 'token': token}
+#       give the client its info to setup the connection
+        self.response.out(template_values)
+#       send the client to his/her own page for viewing
+        self.redirect('record/%s' % token)
+
+#   what to do everytime the client gives me a new chunk of audio data
+    def post(self):
+        value = self.request.get('chunk')
+        if data = None:
+            print("the chunk of data sent to me was None")
+#           EOF
+            sys.exit(0)
+#       parse this chunk of audio data, TODO
+        data = audio_fetch.TerpsWrap(value)
+
+# TODO, hanging out here, hopefully notes should begin to appear
+class RecordViewer(webapp2.RequestHandler):
+        def get(self):
+            self.response.headers['Content-Type'] = 'text/html'
+            self.response.out.write("yo")
 
 application = webapp2.WSGIApplication([
 #   define the page tree here
@@ -64,4 +93,6 @@ application = webapp2.WSGIApplication([
     ('/about', AboutPage),
     ('/upload', UploadHandler),
     ('/serve/([^/]+)?', ServeHandler),
+    ('/record', RecordHandler),
+    ('/record/([\d+])', RecordViewer),
 ], debug=True)
