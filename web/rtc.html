@@ -7,15 +7,73 @@
         <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
         <script src="https://www.webrtc-experiment.com/RecordRTC.js"></script>
-        <script src="../scripts/recording.js"></script>
     </head>
     <body>
+        <script>
+            function getByID(id) {
+                return document.getElementById(id);
+            }
 
+            var recordAudio = getByID('record-audio'),
+                stopRecordingAudio = getByID('stop-recording-audio'),
+
+            var audio = getByID('audio');
+
+            var audioConstraints = {
+                audio: true,
+                video: false
+            };
+
+        </script>
+        <script>
+            var audioStream;
+            var recorder;
+
+            recordAudio.onclick = function() {
+                if (!audioStream)
+                    navigator.getUserMedia(audioConstraints, function(stream) {
+                        if (window.IsChrome) stream = new window.MediaStream(stream.getAudioTracks());
+                        audioStream = stream;
+
+                        audio.src = URL.createObjectURL(audioStream);
+                        audio.play();
+
+                        // "audio" is a default type
+                        recorder = window.RecordRTC(stream, {
+                            type: 'audio'
+                        });
+                        recorder.startRecording();
+                    }, function() {
+                    });
+                else {
+                    audio.src = URL.createObjectURL(audioStream);
+                    audio.play();
+                    if (recorder) recorder.startRecording();
+                }
+
+                window.isAudio = true;
+
+                this.disabled = true;
+                stopRecordingAudio.disabled = false;
+            };
+     
+            stopRecordingAudio.onclick = function() {
+                this.disabled = true;
+                recordAudio.disabled = false;
+                audio.src = '';
+
+                if (recorder)
+                    recorder.stopRecording(function(url) {
+                        document.getElementById('audio-url-preview').innerHTML = '<a href="' + url + '" target="_blank">Recorded Audio URL</a>';
+                    });
+            };            
+            
+        </script>
         <h1> WebRTC Recording Demo </h1>
 
         <div>
-            <button id="record">Record</button>
-            <button id="stop" disabled>Stop</button>
+            <button id="record-audio">Record</button>
+            <button id="stop-recording-audio" disabled>Stop</button>
             <button id="download">Download</button>
             <audio id="audio" autoplay loop controls></audio>
         </div>
