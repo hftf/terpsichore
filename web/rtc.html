@@ -3,82 +3,24 @@
     <head>
         <title>Recording</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link rel='stylesheet' type='text/css' href='/style/stylesheet.css'/>
         <script src="http://cwilso.github.io/AudioContext-MonkeyPatch/AudioContextMonkeyPatch.js"></script>
         <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         <script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-        <script src="https://www.webrtc-experiment.com/RecordRTC.js"></script>
+        <script src="/scripts/recorder.js"></script>
+        <script src="/scripts/script.js"></script>
     </head>
     <body>
-        <script>
-            function getByID(id) {
-                return document.getElementById(id);
-            }
+        <h1> Recorder.js WAV Export demo </h1>
 
-            var recordAudio = getByID('record-audio'),
-                stopRecordingAudio = getByID('stop-recording-audio'),
-
-            var audio = getByID('audio');
-
-            var audioConstraints = {
-                audio: true,
-                video: false
-            };
-
-        </script>
-        <script>
-            var audioStream;
-            var recorder;
-
-            recordAudio.onclick = function() {
-                if (!audioStream)
-                    navigator.getUserMedia(audioConstraints, function(stream) {
-                        if (window.IsChrome) stream = new window.MediaStream(stream.getAudioTracks());
-                        audioStream = stream;
-
-                        audio.src = URL.createObjectURL(audioStream);
-                        audio.play();
-
-                        // "audio" is a default type
-                        recorder = window.RecordRTC(stream, {
-                            type: 'audio'
-                        });
-                        recorder.startRecording();
-                    }, function() {
-                    });
-                else {
-                    audio.src = URL.createObjectURL(audioStream);
-                    audio.play();
-                    if (recorder) recorder.startRecording();
-                }
-
-                window.isAudio = true;
-
-                this.disabled = true;
-                stopRecordingAudio.disabled = false;
-            };
-     
-            stopRecordingAudio.onclick = function() {
-                this.disabled = true;
-                recordAudio.disabled = false;
-                audio.src = '';
-
-                if (recorder)
-                    recorder.stopRecording(function(url) {
-                        document.getElementById('audio-url-preview').innerHTML = '<a href="' + url + '" target="_blank">Recorded Audio URL</a>';
-                    });
-            };            
-            
-        </script>
-        <h1> WebRTC Recording Demo </h1>
-
-        <div>
-            <button id="record-audio">Record</button>
-            <button id="stop-recording-audio" disabled>Stop</button>
-            <button id="download">Download</button>
-            <audio id="audio" autoplay loop controls></audio>
-        </div>
-    <div style="float right;">
-        <!--INSERT-SUBMIT-->
+    <div style="float left;">
+            <button class="record" type='button' onclick="toggleRecording(this);">Record</button>
+            <button class="stop" type='button'>Stop</button>
+            <button class="download" onclick="saveAudio();">Download</button>
+            <canvas id="analyser" width="768" height="200"></canvas><br>
+            <canvas id="wavedisplay" width="768" height="200"></canvas><br
     </div>
+    <div style="float right;">
+<form action="http://terpsichore-music.appspot.com/_ah/upload/AMmfu6bPmuo8LV4e5KzcIzoMK89VuUBRTVpE_F2TlmUS5p4XfluChhBNhDNO0LgnfoYe8ES5W9pW8a81PkJ1shA3HivYpmV3ZE6QjIOrTfvfKjd4_E3ohuw2qDAl3FiPs3tfCj6CYsUGIzh2OAuMLOemKFemfpLxww/ALBNUaYAAAAAUivdOmh3uHLyByhLxD0rg8TLlPCUSWy_/" method="POST" enctype="multipart/form-data">Upload File: <input type="file" name="file"> <input type="submit" name="submit" value="Submit"> </form>    </div>
     </body>
 </html>
