@@ -17,7 +17,7 @@ class MainPage(webapp2.RequestHandler):
 
         upload_url = blobstore.create_upload_url('/upload')
 #       naive approach at the moment TODO
-        main = open("web/test.html", "r")
+        main = open("web/rtc.html", "r")
         for l in main:
             if re.search("<!--INSERT-SUBMIT-->", l):
                 self.response.out.write('<form action="%s" method="POST" enctype="multipart/form-data">' % upload_url)
@@ -73,7 +73,7 @@ class RecordHandler(webapp2.RequestHandler):
 #   what to do everytime the client gives me a new chunk of audio data
     def post(self):
         value = self.request.get('chunk')
-        if data = None:
+        if data == None:
             print("the chunk of data sent to me was None")
 #           EOF
             sys.exit(0)
