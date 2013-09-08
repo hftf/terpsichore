@@ -7,7 +7,7 @@ import wave
 import numpy as np
 from StringIO import StringIO
 
-class UploadFile():
+class TerpsWrap():
     def __init__(self, f):
         self.f = StringIO(f)
         self.wave = wave.open(self.f)
