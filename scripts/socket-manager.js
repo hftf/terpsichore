@@ -19,7 +19,6 @@ postArray = function(array) {
 };
 
 onOpened = function() {
-
     connected = true;
 };
 
