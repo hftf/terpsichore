@@ -23,7 +23,7 @@ var analyserContext = null;
 var canvasWidth, canvasHeight;
 var recIndex = 0;
 var myId = 0;
-
+var myToken = null;
 /* TODO:
 
 - offer mono option
@@ -61,11 +61,14 @@ function toggleRecording( e ) {
         $.ajax({
             'type' : 'POST',
             'url' : '/record',
+            'data' : {'flag' : ''},
             'success' : function(data) {
                 channel = new goog.appengine.Channel(data.toString());
 
                 socket = channel.open();
                 myId = socket.applicationKey_;
+                myToken = data.toString();
+                console.log(myToken);
 
                 socket.onopen = onOpened;
                 socket.onmessage = onMessage;

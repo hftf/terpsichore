@@ -6,6 +6,7 @@ from terpsichore import handle_note
 import wave
 import numpy as np
 from StringIO import StringIO
+import unicodedata
 
 class TerpsWrap():
     def __init__(self, f):
@@ -31,3 +32,23 @@ class TerpsWrap():
     def add_note(self, n, start, dur):
         (note, octave, off) = n
         self.notes.append('{} ([]) from {} for {}s'.format(note, octave, start, dur))
+
+""""
+class TerpsStream():
+    def __init__(self, arr):
+        self.arr = arr
+        self.notes = []
+        self.parse()
+
+    def parse(self):
+        self.trans = terpsichore.Transcriber(48000, self.add_note)
+        for i in range(len(self.arr)):
+            if self.arr[i] == '':
+                self.arr[i]=0
+            self.arr[i] = int(self.arr[i])
+        self.trans.process(self.arr)
+
+    def add_note(self, n, start, dur):
+        (note, octave, off) = n
+        """
+     

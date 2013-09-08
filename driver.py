@@ -4,6 +4,7 @@ import re
 import random
 
 import audio_fetch
+from terpsichore import Transcriber
 
 from google.appengine.ext import blobstore
 from google.appengine.ext.webapp import blobstore_handlers
@@ -58,15 +59,38 @@ class ServeHandler(blobstore_handlers.BlobstoreDownloadHandler):
         self.response.headers['Content-Type'] = 'text/plain'
         self.response.out.write(data.notes)
 
+
+transcribers = {}
+notes = {}
 # when you press the record button you activate this handler
 class RecordHandler(webapp2.RequestHandler):
     def post(self):
-        print self.request.get('data')
-        rand = random.getrandbits(16)
-        token = channel.create_channel(str(rand))
-        self.response.headers['Content-Type'] = 'text/plain'
-        self.response.out.write(str(token))
-#       send the client to his/her own page for viewing
+        if self.request.get('token') == '':
+            rand = random.getrandbits(16)
+            token = channel.create_channel(str(rand))
+            transcribers[token] = Transcriber(48000, self.note_adder(token))
+            notes[token] = []
+            self.response.headers['Content-Type'] = 'text/plain'
+            self.response.out.write(str(token))
+        else:
+            token = self.request.get('token')
+            rawData = self.request.get('data').split(';')
+            transcriber = transcribers[token]
+            for i in range(len(rawData)):
+                if rawData[i] == '':
+                    rawData[i]=0
+                else:
+                    rawData[i] = int(rawData[i])
+            transcriber.process(rawData)
+            self.response.headers['Content-Type'] = 'text/plain'
+            if notes[token] != []:
+                print notes[token]
+            self.response.out.write(notes[token])
+            notes[token] = []
+    def note_adder(self, token):
+        return lambda n, start, length, _: notes[token].append((n, start, length))
+
+#           send the client to his/her own page for viewing
         #self.redirect('record/%s' % token)
 
 application = webapp2.WSGIApplication([

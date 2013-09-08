@@ -36,7 +36,8 @@ class Transcriber:
         self.playing = {}
 
     def process(self, data):
-        np.concatenate((self.buffer, data))
+        self.buffer = np.concatenate((self.buffer, np.array(data)))
+        data = self.buffer
         while self.samplestart + SAMPLESIZE < len(data):
             sample = data[self.samplestart:self.samplestart+SAMPLESIZE]
 
@@ -48,7 +49,6 @@ class Transcriber:
                 spectrum.append((f,np.power(np.sum(cs), 2) + np.power(np.sum(ss), 2)))
             spectrum = sorted(spectrum, key=operator.itemgetter(1), reverse=True)
             strong = [s[0] for s in spectrum if s[1] > spectrum[0][1]/16]
-
 
             top = [s[0] for s in spectrum if s[1] > spectrum[0][1]/4]
             notes = [freq2note(s) for s in top[:1]]
@@ -66,7 +66,7 @@ class Transcriber:
                     if end - self.playing[note]['start'] < SAMPLESIZE * 4:
                         kill.append(note)
                     elif self.samplestart - end > SAMPLESIZE:
-                        dur = float(self.playing[note]['end'] - self.playing[note]['start'])/framerate
+                        dur = float(self.playing[note]['end'] - self.playing[note]['start'])/self.framerate
                         self.give_note(note, self.samplestart / float(self.framerate) - dur, dur)
                         kill.append(note)
 
