@@ -13,6 +13,8 @@ def fourier(wave, fr):
 
 NOTES = ['a', 'a#', 'b', 'c', 'c#', 'd', 'd#', 'e', 'f', 'f#', 'g', 'g#']
 
+FREQS = [440 * np.power(2, x/12.) for x in range(-24, 14)]
+
 def freq2note(f):
     l = np.log(f / 440.) / np.log(np.power(2, 1/12.))
     n = np.int(np.round(l))
@@ -41,6 +43,16 @@ class Transcriber:
         while self.samplestart + SAMPLESIZE < len(data):
             sample = data[self.samplestart:self.samplestart+SAMPLESIZE]
 
+            spectrum = []
+            for f in FREQS:
+                fr = f * 2 * np.pi / self.framerate
+                cs = sample * np.cos(np.arange(len(sample)) * fr)
+                ss = sample * np.sin(np.arange(len(sample)) * fr)
+                spectrum.append((f,np.power(np.sum(cs), 2) + np.power(np.sum(ss), 2)))
+            spectrum = sorted(spectrum, key=operator.itemgetter(1), reverse=True)
+            strong = [s[0] for s in spectrum if s[1] > spectrum[0][1]/16]
+
+            """
             freqs = np.array([x * self.framerate
                               for x in fft.fftfreq(len(sample)) if x > 0])
             spectrum = np.absolute(fft.rfft(sample).real[1:])
@@ -51,15 +63,22 @@ class Transcriber:
 
             notes = [freq2note(freqs[i]) for i in top]
             extra = [freq2note(freqs[i]) for i in maxes]
+            """
+
+            top = [s[0] for s in spectrum if s[1] > spectrum[0][1]/4]
+            notes = [freq2note(s) for s in top[:1]]
+            extra = notes
 
             kill = [] # List of notes to forget permanently
+
+            # Kill off harmonics (will harm chords)
 
             for note in self.playing:
                 if not note in extra:
                     if self.playing[note]['end'] is None:
                         self.playing[note]['end'] = self.samplestart
                     end = self.playing[note]['end']
-                    if end - self.playing[note]['start'] < SAMPLESIZE * 2:
+                    if end - self.playing[note]['start'] < SAMPLESIZE * 4:
                         kill.append(note)
                     elif self.samplestart - end > SAMPLESIZE:
                         dur = float(self.playing[note]['end'] - self.playing[note]['start'])/framerate
