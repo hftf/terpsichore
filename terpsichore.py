@@ -17,11 +17,11 @@ def freq2note(f):
     l = np.log(f / 440.) / np.log(np.power(2, 1/12.))
     n = np.int(np.round(l))
     note = NOTES[np.mod(n, 12)]
-    octave = np.int(n / 12.) + 4
+    octave = np.int(np.floor((n + 9) / 12. + 4))
     cents = np.round(100 * (l - n))
     return (note, octave, n)
 
-SAMPLESIZE = 4400
+SAMPLESIZE = 2200
 
 def handle_note(n, start, dur):
     (note, octave, off) = n
@@ -33,6 +33,7 @@ class Transcriber:
         self.add_note = add_note
         self.buffer = np.array([], dtype=np.int16)
         self.samplestart = 0
+        self.playing = {}
         self.current = {}
 
     def process(self, data):
@@ -46,16 +47,45 @@ class Transcriber:
 
             maxes = sig.argrelmax(spectrum, order=4, axis=0)[0]
             maxes = sorted(maxes, key=lambda i:spectrum[i], reverse=True)
-            maxes = [m for m in maxes if spectrum[m] > spectrum[maxes][0]/2.]
+            top = [m for m in maxes if spectrum[m] > spectrum[maxes][0]/2.]
 
-            notes = [freq2note(freqs[m]) for m in maxes]
+            notes = [freq2note(freqs[i]) for i in top]
+            extra = [freq2note(freqs[i]) for i in maxes]
 
+            kill = [] # List of notes to forget permanently
+
+            for note in self.playing:
+                if not note in extra:
+                    if self.playing[note]['end'] is None:
+                        self.playing[note]['end'] = self.samplestart
+                    end = self.playing[note]['end']
+                    if end - self.playing[note]['start'] < SAMPLESIZE * 2:
+                        kill.append(note)
+                    elif self.samplestart - end > SAMPLESIZE:
+                        dur = float(self.playing[note]['end'] - self.playing[note]['start'])/framerate
+                        self.add_note(note, self.samplestart / float(self.framerate) - dur, dur)
+                        kill.append(note)
+
+            for k in kill:
+                del(self.playing[k])
+
+            for note in set(notes):
+                if note in self.playing:
+                    pass
+                else:
+                    self.playing[note] = { 'start': self.samplestart,
+                                           'end': None}
+            
+            # Advance
+            self.samplestart += SAMPLESIZE/2
+
+"""
             # Send and kill ended notes
             kill = []
             for note in self.current:
                 if not note in notes:
                     dur = self.current[note] / self.framerate
-                    if dur > 0.0002:
+                    if dur > 0.05:
                         self.add_note(note, self.samplestart / float(self.framerate) - dur, dur)
                     kill.append(note)
             for k in kill:
@@ -67,9 +97,8 @@ class Transcriber:
                     self.current[note] += SAMPLESIZE/2.
                 else:
                     self.current[note] = 0.
+                    """
 
-            # Advance
-            self.samplestart += SAMPLESIZE/2
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
